@@ -1,0 +1,54 @@
+{
+  "leaderboardEntries": [
+    {
+      "username": "jellyfish",
+      "score": 4200,
+      "index": 1000
+    },
+    {
+      "username": "cowboy",
+      "score": 3500,
+      "index": 999
+    },
+    {
+      "username": "robotman",
+      "score": 3000,
+      "index": 998
+    },
+    {
+      "username": "pianoMaster",
+      "score": 2900,
+      "index": 997
+    },
+    {
+      "username": "andrew149",
+      "score": 2500,
+      "index": 996
+    },
+    {
+      "username": "courtskit",
+      "score": 2200,
+      "index": 995
+    },
+    {
+      "username": "PlutoBoy",
+      "score": 2000,
+      "index": 994
+    },
+    {
+      "username": "Whiley",
+      "score": 1800,
+      "index": 993
+    },
+    {
+      "username": "DemonSlayer",
+      "score": 1400,
+      "index": 992
+    },
+    {
+      "username": "Gizmo",
+      "score": 900,
+      "index": 991
+    }
+  ]
+}
