@@ -1,9 +1,39 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using RedisLeaderboard.Models
+@using RedisLeaderboard.Services
+@inject Interfaces.ILeaderboardEntryService _leaderboard
 
-<h1>Hello, world!</h1>
+<PageTitle>Leader Board</PageTitle>
 
-Welcome to your new app.
+<h1>Leaderboard</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button @onclick="LoadEntries">
+    Load Results
+</button>
+
+@if (leaderboardEntries is not null)
+{
+    @foreach (var entry in leaderboardEntries)
+    {
+        <div>
+            <h1>@entry.username</h1>
+            <h1>@entry.score</h1>
+        </div>
+    }
+}
+
+@code {
+    private List<LeaderboardEntryModel> leaderboardEntries;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
+    //}
+
+    private async Task LoadEntries()
+    {
+        leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
+    }
+}
+
