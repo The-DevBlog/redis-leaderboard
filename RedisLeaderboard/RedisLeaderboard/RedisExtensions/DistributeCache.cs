@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using RedisLeaderboard.Models;
 using System.Text.Json;
 
 namespace RedisLeaderboard.RedisExtensions
@@ -24,9 +25,7 @@ namespace RedisLeaderboard.RedisExtensions
         public static async Task<T> GetRecords<T>(this IDistributedCache cache, string recordId)
         {
             var jsonData = await cache.GetStringAsync(recordId);
-            var deserializedData = JsonSerializer.Deserialize<T>(jsonData);
-
-            return jsonData == null ? default(T) : deserializedData;
+            return jsonData == null ? default(T) : JsonSerializer.Deserialize<T>(jsonData);
         }
     }
 }
