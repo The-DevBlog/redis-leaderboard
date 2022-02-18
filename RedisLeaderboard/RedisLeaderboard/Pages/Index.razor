@@ -2,27 +2,17 @@
 
 @using RedisLeaderboard.Models
 @using RedisLeaderboard.Services
-@using RedisExtensions
 @inject Interfaces.ILeaderboardEntryService _leaderboard
-@inject IDistributedCache _cache
 
 <PageTitle>Leader Board</PageTitle>
 
 <h1>Leaderboard</h1>
 
-<button style="color:@isCacheData" @onclick="LoadEntries">
+<button @onclick="LoadEntries">
     Load Results
 </button>
 
-@if (leaderboardEntries is null & src == "")
-{
-    <p>Click the button to load the forecast</p>
-}
-else if (leaderboardEntries is null)
-{
-    <p>em>loading...</p>
-}
-else
+@if (leaderboardEntries is not null)
 {
     @foreach (var entry in leaderboardEntries)
     {
@@ -35,36 +25,15 @@ else
 
 @code {
     private List<LeaderboardEntryModel> leaderboardEntries;
-    private string src = "";
-    private string isCacheData = "";
 
     //protected override async Task OnInitializedAsync()
     //{
-    //    leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
+    //leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
     //}
 
     private async Task LoadEntries()
     {
-        leaderboardEntries = null;
-        src = null;
-
-        string key = "Entry_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
-
-        leaderboardEntries = await _cache.GetRecords<List<LeaderboardEntryModel>>(key);
-
-        if (leaderboardEntries is null)
-        {
-            leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
-            src = $"Loaded from API at {DateTime.Now}";
-            isCacheData = "";
-
-            await _cache.SetRecord(key, leaderboardEntries);
-        }
-        else
-        {
-            src = $"Loaded from the cache at {DateTime.Now}";
-            isCacheData = "red";
-        }
+        leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
     }
 }
 

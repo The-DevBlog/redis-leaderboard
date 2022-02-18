@@ -9,33 +9,40 @@ namespace RedisLeaderboard.Services
     {
         ConnectionMultiplexer _redis;
         IDatabase _db;
+        IConfiguration _config;
 
-        public LeaderboardEntryService()
+        public LeaderboardEntryService(IConfiguration config)
         {
-            _redis = ConnectionMultiplexer.Connect("localhost:5002");
+            _config = config;
+            _redis = ConnectionMultiplexer.Connect(_config.GetConnectionString("Redis"));
             _db = _redis.GetDatabase(0);
         }
-        /// <summary>
-        /// Retrieves data from a 'simulated' database using a json file
-        /// </summary>
-        /// <returns>List<GetLeaderboardEntries>/returns>
-        //public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries()
-        //{
-        //    StreamReader r = new StreamReader("Data/data.json");
-        //    string json = r.ReadToEnd();
 
-        //    var result = JsonSerializer.Deserialize<List<LeaderboardEntryModel>>(json);
-
-        //    return result;
-        //}
-
-        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries()
+        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries)
         {
+            var result = new List<LeaderboardEntryModel>();
+
+            // if there are no current entries, get data from DB
+            if (currentEntries is null)
+                result = await GetFromDB();
+            // else, get data from redis cache
+            else
+            {
+                var redisData = await _db.SortedSetRangeByScoreWithScoresAsync("leaderboard");
+                result = redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
+            }
+
+            return result;
+        }
+
+        private async Task<List<LeaderboardEntryModel>> GetFromDB()
+        {
+            // get data from JSON file
             StreamReader r = new StreamReader("Data/data.json");
             string json = r.ReadToEnd();
-
             var result = JsonSerializer.Deserialize<List<LeaderboardEntryModel>>(json);
 
+            // add to redis sorted set
             foreach (var obj in result)
                 await _db.SortedSetAddAsync("leaderboard", obj.username, obj.score);
 
