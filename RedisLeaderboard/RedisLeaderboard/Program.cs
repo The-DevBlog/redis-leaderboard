@@ -1,13 +1,18 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using RedisLeaderboard.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+
+// redis configuration
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Redis_";
+});
 
 var app = builder.Build();
 
