@@ -2,12 +2,12 @@
 {
     public class LeaderboardEntryModel
     {
-        public string Username { get; set; }
-        public int Score { get; set; }
-        public LeaderboardEntryModel(string username, int score)
-        {
-            Username = username;
-            Score = score;
-        }
+        public string username { get; set; }
+        public int score { get; set; }
+        //public LeaderboardEntryModel(string username, int score)
+        //{
+        //    Username = username;
+        //    Score = score;
+        //}
     }
 }

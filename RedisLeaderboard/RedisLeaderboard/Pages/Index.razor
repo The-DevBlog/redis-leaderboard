@@ -10,28 +10,60 @@
 
 <h1>Leaderboard</h1>
 
+<button style="color:@isCacheData" @onclick="LoadEntries">
+    Load Results
+</button>
+
+@if (leaderboardEntries is null & src == "")
+{
+    <p>Click the button to load the forecast</p>
+}
+else if (leaderboardEntries is null)
+{
+    <p>em>loading...</p>
+}
+else
+{
+    @foreach (var entry in leaderboardEntries)
+    {
+        <div>
+            <h1>@entry.username</h1>
+            <h1>@entry.score</h1>
+        </div>
+    }
+}
+
 @code {
-    private LeaderboardEntryModel[] leaderboardEntries;
-    private string srcDest;
+    private List<LeaderboardEntryModel> leaderboardEntries;
+    private string src = "";
     private string isCacheData = "";
 
     protected override async Task OnInitializedAsync()
     {
-        //leaderboardEntries = await _leader
+        leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
     }
 
     private async Task LoadEntries()
     {
         leaderboardEntries = null;
-        srcDest = null;
+        src = null;
 
         string key = "Entry_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
 
-        leaderboardEntries = await _cache.GetRecords<LeaderboardEntryModel[]>(key);
+        leaderboardEntries = await _cache.GetRecords<List<LeaderboardEntryModel>>(key);
 
-        if(leaderboardEntries is null)
+        if (leaderboardEntries is null)
         {
-            leaderboardEntries = await _leaderboard.GetEntries();
+            leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
+            src = $"Loaded from API at {DateTime.Now}";
+            isCacheData = "";
+
+            await _cache.SetRecord(key, leaderboardEntries);
+        }
+        else
+        {
+            src = $"Loaded from the cache at {DateTime.Now}";
+            isCacheData = "red";
         }
     }
 }

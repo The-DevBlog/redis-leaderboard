@@ -6,7 +6,7 @@ namespace RedisLeaderboard.RedisExtensions
     // class used from Tim Corey's YouTube tutorial: https://www.youtube.com/watch?v=UrQWii_kfIE
     public static class DistributeCache
     {
-        public static async Task Set<T>(this IDistributedCache cache,
+        public static async Task SetRecord<T>(this IDistributedCache cache,
             string recordId,
             T data,
             TimeSpan? absoluteExpireTime = null,
