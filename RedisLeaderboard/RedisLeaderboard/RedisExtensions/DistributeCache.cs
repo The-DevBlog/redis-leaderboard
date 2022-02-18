@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using RedisLeaderboard.Models;
 using System.Text.Json;
 
 namespace RedisLeaderboard.RedisExtensions
@@ -14,7 +13,6 @@ namespace RedisLeaderboard.RedisExtensions
             TimeSpan? unusedExpireTime = null)
         {
             var options = new DistributedCacheEntryOptions();
-
             options.AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromSeconds(60);
             options.SlidingExpiration = unusedExpireTime;
 
