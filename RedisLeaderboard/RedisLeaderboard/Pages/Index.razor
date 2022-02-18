@@ -1,8 +1,38 @@
-﻿@using 
+﻿@page "/"
 
-@page "/"
+@using RedisLeaderboard.Models
+@using RedisLeaderboard.Services
+@using RedisExtensions
+@inject Interfaces.ILeaderboardEntryService _leaderboard
+@inject IDistributedCache _cache
 
 <PageTitle>Leader Board</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Leaderboard</h1>
+
+@code {
+    private LeaderboardEntryModel[] leaderboardEntries;
+    private string srcDest;
+    private string isCacheData = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        //leaderboardEntries = await _leader
+    }
+
+    private async Task LoadEntries()
+    {
+        leaderboardEntries = null;
+        srcDest = null;
+
+        string key = "Entry_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+
+        leaderboardEntries = await _cache.GetRecords<LeaderboardEntryModel[]>(key);
+
+        if(leaderboardEntries is null)
+        {
+            leaderboardEntries = await _leaderboard.GetEntries();
+        }
+    }
+}
 
