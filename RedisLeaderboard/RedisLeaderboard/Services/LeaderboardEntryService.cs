@@ -21,14 +21,18 @@ namespace RedisLeaderboard.Services
         public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries)
         {
             // if 0 current entries, get from DB (json file), else, get from redis cache
-            var redisData = await GetFromDB();
-            return redisData is null ? await GetFromDB() : redisData;
+            var redisData = await GetFromRedisCache();
+            return redisData.Count == 0 ? await GetFromDB() : redisData;
         }
 
-        public async Task<List<LeaderboardEntryModel>> AddLeaderboardEntry(LeaderboardEntryModel entry)
+        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry)
         {
             await _db.SortedSetAddAsync("leaderboard", entry.username, entry.score);
-            return await GetFromRedisCache();
+        }
+
+        public async Task DeleteEntry(string username)
+        {
+            await _db.SortedSetRemoveAsync("leaderboard", username);
         }
 
         private async Task<List<LeaderboardEntryModel>> GetFromRedisCache()
