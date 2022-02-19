@@ -24,7 +24,9 @@
                         <th scope="row">@i</th>
                         <td>@entry.username</td>
                         <td>@entry.score</td>
-                        <td @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></td>
+                        <td delete>
+                            <span @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></span>
+                        </td>
                     </tr>
                     i++;
                 }
