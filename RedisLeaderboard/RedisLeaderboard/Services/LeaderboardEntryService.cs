@@ -20,16 +20,8 @@ namespace RedisLeaderboard.Services
 
         public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries)
         {
-            var result = new List<LeaderboardEntryModel>();
-
-            // if there are no current entries 
-            if (currentEntries is null)
-                result = await GetFromDB();
-            // else, get data from redis cache
-            else
-                result = await GetFromRedisCache();
-
-            return result;
+            // if 0 current entries, get from DB (json file), else, get from redis cache
+            return currentEntries is null ? await GetFromDB() : await GetFromRedisCache();
         }
 
         public async Task<List<LeaderboardEntryModel>> AddLeaderboardEntry(LeaderboardEntryModel entry)

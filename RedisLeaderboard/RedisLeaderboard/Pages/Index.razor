@@ -14,10 +14,6 @@
     <button type="submit">Add Entry</button>
 </EditForm>
 
-<button @onclick="LoadEntries">
-    Load Results
-</button>
-
 @if (leaderboardEntries is not null)
 {
     @foreach (var entry in leaderboardEntries)
@@ -32,12 +28,8 @@
 @code {
     private List<LeaderboardEntryModel> leaderboardEntries;
     private LeaderboardEntryModel newEntry = new LeaderboardEntryModel();
-    //protected override async Task OnInitializedAsync()
-    //{
-    //leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
-    //}
 
-    private async Task LoadEntries()
+    protected override async Task OnInitializedAsync()
     {
         leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
     }
