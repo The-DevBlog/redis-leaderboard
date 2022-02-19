@@ -1,1 +1,11 @@
+main {
+    width: 1200px;
+    margin: 20px auto;
+    align-items: center;
+}
 
+@media screen and (max-width: 1225px) {
+    main {
+        width: auto;
+    }
+}

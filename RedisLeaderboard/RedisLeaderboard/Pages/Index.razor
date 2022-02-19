@@ -7,6 +7,8 @@
 <PageTitle>Leader Board</PageTitle>
 
 <EditForm Model=@newEntry OnValidSubmit=AddEntry>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
     <InputText @bind-Value=newEntry.username DisplayName="username" />
     <InputNumber @bind-Value=newEntry.score DisplayName="score" />
     <button type="submit">Add Entry</button>
