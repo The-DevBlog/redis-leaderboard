@@ -1,42 +1,106 @@
 [
   {
-    "username": "jellyfish",
+    "username": "Gandalf",
     "score": 4200
   },
   {
-    "username": "cowboy",
+    "username": "Elrond",
     "score": 3500
   },
   {
-    "username": "robotman",
+    "username": "Aragorn",
     "score": 3000
   },
   {
-    "username": "pianoMaster",
-    "score": 2900
+    "username": "TomBombadil",
+    "score": 1500
   },
   {
-    "username": "AnonymousUser",
-    "score": 2500
-  },
-  {
-    "username": "TeaDrinker",
-    "score": 2200
-  },
-  {
-    "username": "PlutoBoy",
-    "score": 2000
-  },
-  {
-    "username": "Whiley",
+    "username": "Isildur",
     "score": 1800
   },
   {
-    "username": "DemonSlayer",
+    "username": "Bilbo",
+    "score": 3000
+  },
+  {
+    "username": "Gollum",
+    "score": 950
+  },
+  {
+    "username": "Theoden",
+    "score": 1256
+  },
+  {
+    "username": "Sauron",
+    "score": 4257
+  },
+  {
+    "username": "Faramir",
+    "score": 1883
+  },
+  {
+    "username": "Denethor",
+    "score": 1
+  },
+  {
+    "username": "Saruman",
+    "score": 3002
+  },
+  {
+    "username": "Eowyn",
+    "score": 225
+  },
+  {
+    "username": "Arwen",
+    "score": 156
+  },
+  {
+    "username": "Eomer",
+    "score": 890
+  },
+  {
+    "username": "Theodred",
+    "score": 300
+  },
+  {
+    "username": "Balrog",
+    "score": 4776
+  },
+  {
+    "username": "Galadriel",
+    "score": 5332
+  },
+  {
+    "username": "FarmerMagot",
+    "score": 300
+  },
+  {
+    "username": "Samwise",
+    "score": 2900
+  },
+  {
+    "username": "Boromir",
+    "score": 2500
+  },
+  {
+    "username": "Legolas",
+    "score": 2200
+  },
+  {
+    "username": "Pippin",
+    "score": 2000
+  },
+  {
+    "username": "Merri",
+    "score": 1800
+  },
+  {
+    "username": "Frodo",
     "score": 1400
   },
   {
-    "username": "Gizmo",
+    "username": "Gimli",
     "score": 900
   }
 ]
