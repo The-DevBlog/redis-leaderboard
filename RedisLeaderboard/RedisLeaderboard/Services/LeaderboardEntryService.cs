@@ -10,6 +10,7 @@ namespace RedisLeaderboard.Services
         ConnectionMultiplexer _redis;
         IDatabase _db;
         IConfiguration _config;
+        private int numberOfEntries;
 
         public LeaderboardEntryService(IConfiguration config)
         {
@@ -18,10 +19,15 @@ namespace RedisLeaderboard.Services
             _db = _redis.GetDatabase(0);
         }
 
-        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries)
+        public int GetTotalCount()
+        {
+            return numberOfEntries;
+        }
+
+        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries, int currentPg)
         {
             // if 0 current entries, get from DB (json file), else, get from redis cache
-            var redisData = await GetFromRedisCache();
+            var redisData = await GetFromRedisCache(currentPg);
             return redisData.Count == 0 ? await GetFromDB() : redisData;
         }
 
@@ -35,15 +41,16 @@ namespace RedisLeaderboard.Services
             await _db.SortedSetRemoveAsync("leaderboard", username);
         }
 
-        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache()
+        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg)
         {
-            var result = new List<LeaderboardEntryModel>();
-            var redisData = await _db.SortedSetRangeByScoreWithScoresAsync("leaderboard");
+            numberOfEntries = (int)await _db.SortedSetLengthAsync("leaderboard");
 
-            // sort by descending score
-            Array.Reverse(redisData);
-            result = redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
-            return result;
+            int from = currentPg * 10 - 10;
+            int to = from + 9;
+
+            var redisData = await _db.SortedSetRangeByRankWithScoresAsync("leaderboard", from, to, Order.Descending);
+
+            return redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
         }
 
         private async Task<List<LeaderboardEntryModel>> GetFromDB()
