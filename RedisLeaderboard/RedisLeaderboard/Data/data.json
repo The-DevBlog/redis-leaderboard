@@ -1,52 +1,42 @@
 [
   {
     "username": "jellyfish",
-    "score": 4200,
-    "index": 1000
+    "score": 4200
   },
   {
     "username": "cowboy",
-    "score": 3500,
-    "index": 999
+    "score": 3500
   },
   {
     "username": "robotman",
-    "score": 3000,
-    "index": 998
+    "score": 3000
   },
   {
     "username": "pianoMaster",
-    "score": 2900,
-    "index": 997
+    "score": 2900
   },
   {
-    "username": "andrew149",
-    "score": 2500,
-    "index": 996
+    "username": "AnonymousUser",
+    "score": 2500
   },
   {
-    "username": "courtskit",
-    "score": 2200,
-    "index": 995
+    "username": "TeaDrinker",
+    "score": 2200
   },
   {
     "username": "PlutoBoy",
-    "score": 2000,
-    "index": 994
+    "score": 2000
   },
   {
     "username": "Whiley",
-    "score": 1800,
-    "index": 993
+    "score": 1800
   },
   {
     "username": "DemonSlayer",
-    "score": 1400,
-    "index": 992
+    "score": 1400
   },
   {
     "username": "Gizmo",
-    "score": 900,
-    "index": 991
+    "score": 900
   }
 ]

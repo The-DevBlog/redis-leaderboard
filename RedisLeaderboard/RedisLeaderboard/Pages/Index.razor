@@ -8,9 +8,11 @@
 
 <h1>Leaderboard</h1>
 
-<button @onclick="LoadEntries">
-    Load Results
-</button>
+<EditForm Model=@newEntry OnValidSubmit=AddEntry>
+    <InputText @bind-Value=newEntry.username DisplayName="username" />
+    <InputNumber @bind-Value=newEntry.score DisplayName="score" />
+    <button type="submit">Add Entry</button>
+</EditForm>
 
 @if (leaderboardEntries is not null)
 {
@@ -25,15 +27,16 @@
 
 @code {
     private List<LeaderboardEntryModel> leaderboardEntries;
+    private LeaderboardEntryModel newEntry = new LeaderboardEntryModel();
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
-    //}
-
-    private async Task LoadEntries()
+    protected override async Task OnInitializedAsync()
     {
         leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
+    }
+
+    private async Task AddEntry()
+    {
+        leaderboardEntries = await _leaderboard.AddLeaderboardEntry(newEntry);
     }
 }
 
