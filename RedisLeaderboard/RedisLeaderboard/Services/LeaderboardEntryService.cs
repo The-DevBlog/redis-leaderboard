@@ -27,20 +27,26 @@ namespace RedisLeaderboard.Services
                 result = await GetFromDB();
             // else, get data from redis cache
             else
-            {
-                var redisData = await _db.SortedSetRangeByScoreWithScoresAsync("leaderboard");
-
-                // sort by descending score
-                Array.Reverse(redisData);
-                result = redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
-            }
+                result = await GetFromRedisCache();
 
             return result;
         }
 
-        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry)
+        public async Task<List<LeaderboardEntryModel>> AddLeaderboardEntry(LeaderboardEntryModel entry)
         {
             await _db.SortedSetAddAsync("leaderboard", entry.username, entry.score);
+            return await GetFromRedisCache();
+        }
+
+        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache()
+        {
+            var result = new List<LeaderboardEntryModel>();
+            var redisData = await _db.SortedSetRangeByScoreWithScoresAsync("leaderboard");
+
+            // sort by descending score
+            Array.Reverse(redisData);
+            result = redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
+            return result;
         }
 
         private async Task<List<LeaderboardEntryModel>> GetFromDB()

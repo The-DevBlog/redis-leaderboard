@@ -44,7 +44,7 @@
 
     private async Task AddEntry()
     {
-        await _leaderboard.AddLeaderboardEntry(newEntry);
+        leaderboardEntries = await _leaderboard.AddLeaderboardEntry(newEntry);
     }
 }
 
