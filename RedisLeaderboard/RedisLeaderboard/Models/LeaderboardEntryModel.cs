@@ -10,5 +10,10 @@
             this.username = username;
             this.score = score;
         }
+
+        public LeaderboardEntryModel()
+        {
+
+        }
     }
 }

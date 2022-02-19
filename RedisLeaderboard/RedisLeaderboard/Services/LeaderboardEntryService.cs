@@ -38,6 +38,11 @@ namespace RedisLeaderboard.Services
             return result;
         }
 
+        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry)
+        {
+            await _db.SortedSetAddAsync("leaderboard", entry.username, entry.score);
+        }
+
         private async Task<List<LeaderboardEntryModel>> GetFromDB()
         {
             // get data from JSON file

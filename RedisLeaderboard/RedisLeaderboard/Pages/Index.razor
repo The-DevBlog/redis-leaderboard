@@ -8,6 +8,12 @@
 
 <h1>Leaderboard</h1>
 
+<EditForm Model=@newEntry OnValidSubmit=AddEntry>
+    <InputText @bind-Value=newEntry.username DisplayName="username" />
+    <InputNumber @bind-Value=newEntry.score DisplayName="score" />
+    <button type="submit">Add Entry</button>
+</EditForm>
+
 <button @onclick="LoadEntries">
     Load Results
 </button>
@@ -25,7 +31,7 @@
 
 @code {
     private List<LeaderboardEntryModel> leaderboardEntries;
-
+    private LeaderboardEntryModel newEntry = new LeaderboardEntryModel();
     //protected override async Task OnInitializedAsync()
     //{
     //leaderboardEntries = await _leaderboard.GetLeaderboardEntries();
@@ -34,6 +40,11 @@
     private async Task LoadEntries()
     {
         leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
+    }
+
+    private async Task AddEntry()
+    {
+        await _leaderboard.AddLeaderboardEntry(newEntry);
     }
 }
 
