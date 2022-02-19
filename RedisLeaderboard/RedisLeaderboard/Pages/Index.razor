@@ -9,8 +9,8 @@
 <EditForm Model=@newEntry OnValidSubmit=AddEntry>
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <InputText @bind-Value=newEntry.username DisplayName="username" />
-    <InputNumber @bind-Value=newEntry.score DisplayName="score" />
+    <InputText @bind-Value=newEntry.username placeholder="username" />
+    <InputNumber @bind-Value=newEntry.score placeholder="score" />
     <button type="submit">Add Entry</button>
 </EditForm>
 
@@ -18,7 +18,7 @@
 {
     <table class="table table-striped">
         <thead>
-            LEAD
+            LEADERBOARD
         </thead>
         <tr>
             <th scope="col">#</th>

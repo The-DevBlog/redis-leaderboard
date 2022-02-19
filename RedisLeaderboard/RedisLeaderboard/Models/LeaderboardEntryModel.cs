@@ -6,7 +6,8 @@ namespace RedisLeaderboard.Models
     {
         [Required]
         public string username { get; set; }
-        public int score { get; set; } = 0;
+        [Required]
+        public int score { get; set; }
 
         public LeaderboardEntryModel(string username, int score)
         {
