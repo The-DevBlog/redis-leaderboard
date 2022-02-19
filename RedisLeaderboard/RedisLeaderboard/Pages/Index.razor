@@ -1,16 +1,9 @@
 ﻿@page "/"
 
-@inject Interfaces.ILeaderboardEntryService _leaderboard
+@inject Interfaces.ILeaderboardEntryService _cache
 
 <PageTitle>Leader Board</PageTitle>
 
-<EditForm Model=@newEntry OnValidSubmit=AddEntry>
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <InputText @bind-Value=newEntry.username placeholder="username" />
-    <InputNumber @bind-Value=newEntry.score placeholder="score" />
-    <button type="submit">Add Entry</button>
-</EditForm>
 
 @if (leaderboardEntries is not null)
 {
@@ -24,18 +17,29 @@
             <th scope="col">Score</th>
         </tr>
         <tbody>
-            @for (int i = 1; i <= leaderboardEntries.Count; i++)
-            {
-                <tr>
-                    <th scope="row">@i</th>
-                    <td>@leaderboardEntries[i - 1].username</td>
-                    <td>@leaderboardEntries[i - 1].score</td>
-                    <TrashIcon />
-                </tr>
+            @{
+                int i = 1;
+                foreach (var entry in leaderboardEntries)
+                {
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>@entry.username</td>
+                        <td>@entry.score</td>
+                        <td @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></td>
+                    </tr>
+                    i++;
+                }
             }
         </tbody>
     </table>
 }
+<EditForm Model=@newEntry OnValidSubmit=AddEntry>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText @bind-Value=newEntry.username placeholder="username" />
+    <InputNumber @bind-Value=newEntry.score placeholder="score" />
+    <button type="submit">Add Entry</button>
+</EditForm>
 
 @code {
     private List<LeaderboardEntryModel> leaderboardEntries;
@@ -43,12 +47,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        leaderboardEntries = await _leaderboard.GetLeaderboardEntries(leaderboardEntries);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries);
     }
 
     private async Task AddEntry()
     {
-        leaderboardEntries = await _leaderboard.AddLeaderboardEntry(newEntry);
+        await _cache.AddLeaderboardEntry(newEntry);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries);
+    }
+
+    private async Task DeleteEntry(string username)
+    {
+        await _cache.DeleteEntry(username);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries);
     }
 }
 
