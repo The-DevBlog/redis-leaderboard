@@ -22,13 +22,16 @@ namespace RedisLeaderboard.Services
         {
             var result = new List<LeaderboardEntryModel>();
 
-            // if there are no current entries, get data from DB
+            // if there are no current entries 
             if (currentEntries is null)
                 result = await GetFromDB();
             // else, get data from redis cache
             else
             {
                 var redisData = await _db.SortedSetRangeByScoreWithScoresAsync("leaderboard");
+
+                // sort by descending score
+                Array.Reverse(redisData);
                 result = redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
             }
 
