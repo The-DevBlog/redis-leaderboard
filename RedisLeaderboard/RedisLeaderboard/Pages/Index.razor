@@ -6,8 +6,6 @@
 
 <PageTitle>Leader Board</PageTitle>
 
-<h1>Leaderboard</h1>
-
 <EditForm Model=@newEntry OnValidSubmit=AddEntry>
     <InputText @bind-Value=newEntry.username DisplayName="username" />
     <InputNumber @bind-Value=newEntry.score DisplayName="score" />
@@ -16,13 +14,26 @@
 
 @if (leaderboardEntries is not null)
 {
-    @foreach (var entry in leaderboardEntries)
-    {
-        <div>
-            <h1>@entry.username</h1>
-            <h1>@entry.score</h1>
-        </div>
-    }
+    <table class="table table-striped">
+        <thead>
+            LEAD
+        </thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">UserName</th>
+            <th scope="col">Score</th>
+        </tr>
+        <tbody>
+            @for (int i = 1; i <= leaderboardEntries.Count; i++)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>@leaderboardEntries[i - 1].username</td>
+                    <td>@leaderboardEntries[i - 1].score</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
