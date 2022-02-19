@@ -1,7 +1,5 @@
 ﻿@page "/"
 
-@using RedisLeaderboard.Models
-@using RedisLeaderboard.Services
 @inject Interfaces.ILeaderboardEntryService _leaderboard
 
 <PageTitle>Leader Board</PageTitle>
@@ -32,6 +30,7 @@
                     <th scope="row">@i</th>
                     <td>@leaderboardEntries[i - 1].username</td>
                     <td>@leaderboardEntries[i - 1].score</td>
+                    <TrashIcon />
                 </tr>
             }
         </tbody>
