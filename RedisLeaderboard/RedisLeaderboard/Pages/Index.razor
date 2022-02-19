@@ -83,6 +83,11 @@
     private async Task DeleteEntry(string username)
     {
         await _cache.DeleteEntry(username);
+
+        // if last entry from page is deleted, load previous page
+        if (leaderboardEntries.Count == 1)
+            SwitchPage("prev");
+
         leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries, currentPg);
         maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)pgCount);
     }
