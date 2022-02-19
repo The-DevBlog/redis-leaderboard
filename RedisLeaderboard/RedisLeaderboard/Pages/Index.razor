@@ -6,6 +6,13 @@
 
 @if (leaderboardEntries is not null)
 {
+    <!-- Paginate -->
+    <div paginate>
+        <button @onclick="@(e => SwitchPage("prev"))"><PageLeftIcon /></button>
+        <span>@currentPg</span>
+        <button @onclick="@(e => SwitchPage("next"))"><PageRightIcon /></button>
+    </div>
+
     <table class="table table-striped">
         <thead>
             LEADERBOARD
@@ -34,12 +41,6 @@
         </tbody>
     </table>
 
-    <!-- Paginate -->
-    <div>
-        <button @onclick="@(e => SwitchPage("prev"))"><PageLeftIcon /></button>
-        <span>@currentPg</span>
-        <button @onclick="@(e => SwitchPage("next"))"><PageRightIcon /></button>
-    </div>
 }
 
 <EditForm Model=@newEntry OnValidSubmit=AddEntry>

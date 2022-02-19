@@ -1,3 +1,11 @@
+div[paginate] {
+    text-align: center;
+}
+
+div[paginate] button:hover {
+    color: grey;
+}
+
 td[delete] span:hover {
     color: red;
     cursor: pointer;
