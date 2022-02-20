@@ -1,2 +1,11 @@
 # redis-leaderboard
-A leaderboard API implimented using Redis, a No-SQL key value cache. 
+
+## What it is
+
+
+
+## How is Works
+
+
+
+## How to use it 
