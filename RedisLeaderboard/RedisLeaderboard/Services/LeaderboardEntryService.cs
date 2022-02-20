@@ -36,16 +36,7 @@ namespace RedisLeaderboard.Services
         /// <returns>List<LeaderboardEntryModel></returns>
         public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage)
         {
-            var redisData = await GetFromRedisCache(currentPg, perPage);
-
-            // if redis data is empty, load in default data 
-            //if (redisData.Count == 0)
-            //{
-            //    await LoadDB();
-            //    redisData = await GetFromRedisCache(currentPg, perPage);
-            //}
-
-            return redisData;
+            return await GetFromRedisCache(currentPg, perPage);
         }
 
         /// <summary>
