@@ -25,7 +25,7 @@
         </tr>
         <tbody>
             @{
-                int i = currentPg * 10 - 10 + 1;
+                int i = currentPg * perPage - perPage + 1;
                 foreach (var entry in leaderboardEntries)
                 {
                     <tr>
@@ -34,7 +34,7 @@
                         <td>@entry.score</td>
 
                         <!-- DELETE ENTRY -->
-                        <td delete>
+                <td delete>
                             <span @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></span>
                         </td>
                     </tr>
@@ -70,13 +70,16 @@
     private List<LeaderboardEntryModel> leaderboardEntries;
     private LeaderboardEntryModel newEntry = new LeaderboardEntryModel();
     int currentPg = 1;
-    int pgCount = 10;
+    int perPage = 5;
     int maxPg;
 
     protected override async Task OnInitializedAsync()
     {
-        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries, currentPg);
-        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)pgCount);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+
+        // set the max possible page number
+        // ex: if entries per page is 10 and there are 26 entries, there is 3 pages
+        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 
     private async Task SwitchPage(string direction)
@@ -88,14 +91,15 @@
         else
             return;
 
-        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries, currentPg);
+        // get new page data
+        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
     }
 
     private async Task AddEntry()
     {
         await _cache.AddLeaderboardEntry(newEntry);
-        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries, currentPg);
-        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)pgCount);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 
     private async Task DeleteEntry(string username)
@@ -106,8 +110,8 @@
         if (leaderboardEntries.Count == 1)
             SwitchPage("prev");
 
-        leaderboardEntries = await _cache.GetLeaderboardEntries(leaderboardEntries, currentPg);
-        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)pgCount);
+        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 }
 

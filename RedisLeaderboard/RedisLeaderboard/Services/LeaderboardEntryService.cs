@@ -19,43 +19,75 @@ namespace RedisLeaderboard.Services
             _db = _redis.GetDatabase(0);
         }
 
+        /// <summary>
+        /// Returns the total number of leaderboard entries
+        /// </summary>
+        /// <returns>int</returns>
         public int GetTotalCount()
         {
             return numberOfEntries;
         }
 
-        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(List<LeaderboardEntryModel> currentEntries, int currentPg)
+        /// <summary>
+        /// Returns a list of LeaderboardEntryModels for one page
+        /// </summary>
+        /// <param name="currentPg">Page number of the current page</param>
+        /// <param name="perPage">Number of entries per page</param>
+        /// <returns>List<LeaderboardEntryModel></returns>
+        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage)
         {
-            // if 0 current entries, get from DB (json file), else, get from redis cache
-            var redisData = await GetFromRedisCache(currentPg);
+            var redisData = await GetFromRedisCache(currentPg, perPage);
+
+            // only return data from DB if redis cache is empty
             return redisData.Count == 0 ? await GetFromDB() : redisData;
         }
 
+        /// <summary>
+        /// Adds a leaderboard entry into the redis cache
+        /// </summary>
+        /// <param name="entry">New leaderboard entry</param>
         public async Task AddLeaderboardEntry(LeaderboardEntryModel entry)
         {
             await _db.SortedSetAddAsync("leaderboard", entry.username, entry.score);
         }
 
+        /// <summary>
+        /// Deletes a leaderboard entry from the redis cache
+        /// </summary>
+        /// <param name="username">Leaderboard entry to delete</param>
         public async Task DeleteEntry(string username)
         {
             await _db.SortedSetRemoveAsync("leaderboard", username);
         }
 
-        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg)
+        /// <summary>
+        /// Returns a list of LeaderboardEntryModels for the current page from the redis cache
+        /// </summary>
+        /// <param name="currentPg">Page number of the current page</param>
+        /// <param name="perPage">Number of entries per page</param>
+        /// <returns>List<LeaderboardEntryModel></returns>
+        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg, int perPage)
         {
             numberOfEntries = (int)await _db.SortedSetLengthAsync("leaderboard");
 
-            int from = currentPg * 10 - 10;
-            int to = from + 9;
+            // calculate the range to retrieve based on the current
+            // page number and the number of entries per page
+            int from = currentPg * perPage - perPage;
+            int to = from + (perPage - 1);
 
             var redisData = await _db.SortedSetRangeByRankWithScoresAsync("leaderboard", from, to, Order.Descending);
 
+            // convert redis data to List<LeaderboardEntryModel> and return
             return redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
         }
 
+        /// <summary>
+        /// Returns a list of LeaderboardEntryModels from the DB (json data)
+        /// </summary>
+        /// <returns>List<LeaderboardEntryModel></returns>
         private async Task<List<LeaderboardEntryModel>> GetFromDB()
         {
-            // get data from JSON file
+            // get starter data from JSON file
             StreamReader r = new StreamReader("Data/data.json");
             string json = r.ReadToEnd();
             var result = JsonSerializer.Deserialize<List<LeaderboardEntryModel>>(json);
