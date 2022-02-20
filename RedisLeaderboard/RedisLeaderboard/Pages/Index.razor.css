@@ -1,3 +1,8 @@
+h1[emptyLeaderboard] {
+    text-align: center;
+    font-size: 2em;
+}
+
 div[paginate] {
     text-align: center;
 }
@@ -11,14 +16,15 @@ td[delete] span:hover {
     cursor: pointer;
 }
 
-div[newEntry] button {
+div[newEntry] button, button[resetData] {
     background-color: lightgray;
     border: 1px solid black;
     border-radius: 5px;
     display: block;
     padding: 3.5px;
+    margin: 5px 0px;
 }
 
-    div[newEntry] button:hover {
+    div[newEntry] button:hover, button[resetData]:hover {
         background-color: gainsboro;
     }

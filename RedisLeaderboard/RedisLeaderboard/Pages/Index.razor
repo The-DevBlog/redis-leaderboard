@@ -8,7 +8,7 @@
 {
     @if (leaderboardEntries.Count == 0)
     {
-        <h1>No entries</h1>
+        <h1 emptyLeaderboard>No entries</h1>
     }
     else
     {
@@ -63,7 +63,7 @@
     </EditForm>
 </div>
 
-<button @onclick=RestoreDefaultData type="submit">Reset Data</button>
+<button resetData @onclick=RestoreDefaultData type="submit">Reset Data</button>
 
 <style>
     div[newEntry] input {
