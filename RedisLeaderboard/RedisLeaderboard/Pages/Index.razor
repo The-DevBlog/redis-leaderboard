@@ -6,6 +6,7 @@
 
 @if (leaderboardEntries is not null)
 {
+    <!-- EMPTY LEADERBOARD -->
     @if (leaderboardEntries.Count == 0)
     {
         <h1 emptyLeaderboard>No entries</h1>
@@ -63,6 +64,7 @@
     </EditForm>
 </div>
 
+<!-- RESET DATA -->
 <button resetData @onclick=RestoreDefaultData type="submit">Reset Data</button>
 
 <style>
