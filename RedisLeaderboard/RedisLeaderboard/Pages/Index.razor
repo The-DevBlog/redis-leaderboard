@@ -6,43 +6,50 @@
 
 @if (leaderboardEntries is not null)
 {
-    <!-- PAGINATE -->
-    <div paginate>
-        <button @onclick="@(e => SwitchPage("prev"))"><PageLeftIcon /></button>
-        <span>@currentPg</span>
-        <button @onclick="@(e => SwitchPage("next"))"><PageRightIcon /></button>
-    </div>
+    @if (leaderboardEntries.Count == 0)
+    {
+        <h1>No entries</h1>
+    }
+    else
+    {
+        <!-- PAGINATE -->
+        <div paginate>
+            <button @onclick="@(e => SwitchPage("prev"))"><PageLeftIcon /></button>
+            <span>@currentPg</span>
+            <button @onclick="@(e => SwitchPage("next"))"><PageRightIcon /></button>
+        </div>
 
-    <!-- LEADERBOARD -->
-    <table class="table table-striped">
-        <thead>
-            LEADERBOARD
-        </thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">UserName</th>
-            <th scope="col">Score</th>
-        </tr>
-        <tbody>
-            @{
-                int i = currentPg * perPage - perPage + 1;
-                foreach (var entry in leaderboardEntries)
-                {
-                    <tr>
-                        <th scope="row">@i</th>
-                        <td>@entry.username</td>
-                        <td>@entry.score</td>
+        <!-- LEADERBOARD -->
+        <table class="table table-striped">
+            <thead>
+                LEADERBOARD
+            </thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">UserName</th>
+                <th scope="col">Score</th>
+            </tr>
+            <tbody>
+                @{
+                    int i = currentPg * perPage - perPage + 1;
+                    foreach (var entry in leaderboardEntries)
+                    {
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@entry.username</td>
+                            <td>@entry.score</td>
 
-                        <!-- DELETE ENTRY -->
+                            <!-- DELETE ENTRY -->
                 <td delete>
-                            <span @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></span>
-                        </td>
-                    </tr>
-                    i++;
+                                <span @onclick="() => DeleteEntry(entry.username)"><TrashIcon /></span>
+                            </td>
+                        </tr>
+                        i++;
+                    }
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
 }
 
 <!-- ADD ENTRY -->
@@ -55,6 +62,8 @@
         <button type="submit">Add Entry</button>
     </EditForm>
 </div>
+
+<button @onclick=RestoreDefaultData type="submit">Reset Data</button>
 
 <style>
     div[newEntry] input {
@@ -70,15 +79,21 @@
     private List<LeaderboardEntryModel> leaderboardEntries;
     private LeaderboardEntryModel newEntry = new LeaderboardEntryModel();
     int currentPg = 1;
-    int perPage = 5;
+    int perPage = 10;
     int maxPg;
 
     protected override async Task OnInitializedAsync()
     {
         leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
 
-        // set the max possible page number
-        // ex: if entries per page is 10 and there are 26 entries, there is 3 pages
+        //set the max possible page number
+        //ex: if entries per page is 10 and there are 26 entries, there is 3 pages
+        maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
+    }
+
+    private async Task RestoreDefaultData()
+    {
+        leaderboardEntries = await _cache.RestoreDefaultData();
         maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 

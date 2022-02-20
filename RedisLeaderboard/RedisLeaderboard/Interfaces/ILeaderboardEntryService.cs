@@ -19,6 +19,18 @@ namespace RedisLeaderboard.Interfaces
         Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage);
 
         /// <summary>
+        /// Returns a list of LeaderboardEntryModels from the DB (json data)
+        /// </summary>
+        /// <returns>List<LeaderboardEntryModel></returns>
+        Task LoadDB();
+
+        /// <summary>
+        /// Restores the leaderboard data with the default JSON data
+        /// </summary>
+        /// <returns>List<LeaderboardEntryModel></returns>
+        Task<List<LeaderboardEntryModel>> RestoreDefaultData();
+
+        /// <summary>
         /// Adds a leaderboard entry into the redis cache
         /// </summary>
         /// <param name="entry">New leaderboard entry</param>
