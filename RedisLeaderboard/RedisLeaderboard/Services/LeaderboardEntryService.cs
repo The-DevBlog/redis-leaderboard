@@ -38,8 +38,14 @@ namespace RedisLeaderboard.Services
         {
             var redisData = await GetFromRedisCache(currentPg, perPage);
 
-            // only return data from DB if redis cache is empty
-            return redisData.Count == 0 ? await GetFromDB() : redisData;
+            // if redis data is empty, load in default data 
+            //if (redisData.Count == 0)
+            //{
+            //    await LoadDB();
+            //    redisData = await GetFromRedisCache(currentPg, perPage);
+            //}
+
+            return redisData;
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace RedisLeaderboard.Services
         /// <param name="currentPg">Page number of the current page</param>
         /// <param name="perPage">Number of entries per page</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg, int perPage)
+        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg = 1, int perPage = 10)
         {
             numberOfEntries = (int)await _db.SortedSetLengthAsync("leaderboard");
 
@@ -82,10 +88,21 @@ namespace RedisLeaderboard.Services
         }
 
         /// <summary>
+        /// Restores the leaderboard data with the default JSON data
+        /// </summary>
+        /// <returns>List<LeaderboardEntryModel></returns>
+        public async Task<List<LeaderboardEntryModel>> RestoreDefaultData()
+        {
+            await _db.SortedSetRemoveRangeByRankAsync("leaderboard", 0, -1);
+            await LoadDB();
+            return await GetFromRedisCache();
+        }
+
+        /// <summary>
         /// Returns a list of LeaderboardEntryModels from the DB (json data)
         /// </summary>
         /// <returns>List<LeaderboardEntryModel></returns>
-        private async Task<List<LeaderboardEntryModel>> GetFromDB()
+        public async Task LoadDB()
         {
             // get starter data from JSON file
             StreamReader r = new StreamReader("Data/data.json");
@@ -95,8 +112,6 @@ namespace RedisLeaderboard.Services
             // add to redis sorted set
             foreach (var obj in result)
                 await _db.SortedSetAddAsync("leaderboard", obj.username, obj.score);
-
-            return result;
         }
     }
 }
