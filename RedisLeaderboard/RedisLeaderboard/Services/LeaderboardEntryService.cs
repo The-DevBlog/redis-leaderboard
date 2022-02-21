@@ -36,6 +36,9 @@ namespace RedisLeaderboard.Services
         /// <returns>List<LeaderboardEntryModel></returns>
         public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage)
         {
+            if (numberOfEntries == 0)
+                await LoadDB();
+
             return await GetFromRedisCache(currentPg, perPage);
         }
 
