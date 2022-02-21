@@ -42,7 +42,7 @@ namespace RedisLeaderboardTests
         [InlineData(6, 3)]
         public async Task CanGetLeaderboardEntriesForPage(int expected, int pageNum)
         {
-            // arrnge
+            // arrange
             var service = new IsolatedService();
             await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
             await service.leaderboardService.LoadDB("leaderboard-tests");
@@ -91,7 +91,22 @@ namespace RedisLeaderboardTests
 
             // assert 
             Assert.False(contains);
-
         }
+
+        [Fact]
+        public async Task CanLoadDatabaseWithDefaultData()
+        {
+            // arrange 
+            var service = new IsolatedService();
+            await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
+
+            // act
+            await service.leaderboardService.LoadDB("leaderboard-tests");
+            var results = await service.db.SortedSetRangeByRankAsync("leaderboard-tests", 0, -1);
+
+            // assert
+            Assert.Equal(26, results.Length);
+        }
+
     }
 }
