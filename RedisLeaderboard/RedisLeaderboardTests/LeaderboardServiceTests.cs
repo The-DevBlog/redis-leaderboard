@@ -94,7 +94,28 @@ namespace RedisLeaderboardTests
         }
 
         [Fact]
-        public async Task CanLoadDatabaseWithDefaultData()
+        public async Task CanRestoreDbWithDefaultData()
+        {
+            // arrange
+            var service = new IsolatedService();
+            await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
+
+            // act
+            await service.db.SortedSetAddAsync("leaderboard-tests", "Newuser", 100);
+            await service.db.SortedSetAddAsync("leaderboard-tests", "Newuser2", 200);
+            await service.leaderboardService.RestoreDefaultData("leaderboard-tests");
+            var results = await service.db.SortedSetRangeByRankAsync("leaderboard-tests", 0, -1);
+
+            // assert
+            Assert.Equal(26, results.Length);
+
+        }
+
+        /// <summary>
+        /// Tests LoadDB()
+        /// </summary>
+        [Fact]
+        public async Task CanInitializeDbWithDefaultData()
         {
             // arrange 
             var service = new IsolatedService();
@@ -107,6 +128,5 @@ namespace RedisLeaderboardTests
             // assert
             Assert.Equal(26, results.Length);
         }
-
     }
 }

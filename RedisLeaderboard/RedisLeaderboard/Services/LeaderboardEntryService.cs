@@ -95,11 +95,12 @@ namespace RedisLeaderboard.Services
         /// <summary>
         /// Restores the leaderboard data with the default JSON data
         /// </summary>
+        /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        public async Task<List<LeaderboardEntryModel>> RestoreDefaultData()
+        public async Task<List<LeaderboardEntryModel>> RestoreDefaultData(string db = "leaderboard")
         {
-            await _db.SortedSetRemoveRangeByRankAsync("leaderboard", 0, -1);
-            await LoadDB();
+            await _db.SortedSetRemoveRangeByRankAsync(db, 0, -1);
+            await LoadDB(db);
             return await GetFromRedisCache();
         }
 
