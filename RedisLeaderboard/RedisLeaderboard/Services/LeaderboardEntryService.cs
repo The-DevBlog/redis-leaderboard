@@ -33,31 +33,34 @@ namespace RedisLeaderboard.Services
         /// </summary>
         /// <param name="currentPg">Page number of the current page</param>
         /// <param name="perPage">Number of entries per page</param>
+        /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage)
+        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage, string db = "leaderboard")
         {
             if (numberOfEntries == 0)
-                await LoadDB();
+                await LoadDB(db);
 
-            return await GetFromRedisCache(currentPg, perPage);
+            return await GetFromRedisCache(currentPg, perPage, db);
         }
 
         /// <summary>
         /// Adds a leaderboard entry into the redis cache
         /// </summary>
         /// <param name="entry">New leaderboard entry</param>
-        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry)
+        /// <param name="db">Specified redis DB</param>
+        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry, string db = "leaderboard")
         {
-            await _db.SortedSetAddAsync("leaderboard", entry.username, entry.score);
+            await _db.SortedSetAddAsync(db, entry.username, entry.score);
         }
 
         /// <summary>
         /// Deletes a leaderboard entry from the redis cache
         /// </summary>
         /// <param name="username">Leaderboard entry to delete</param>
-        public async Task DeleteEntry(string username)
+        /// <param name="db">Specified redis DB</param>
+        public async Task DeleteEntry(string username, string db = "leaderboard")
         {
-            await _db.SortedSetRemoveAsync("leaderboard", username);
+            await _db.SortedSetRemoveAsync(db, username);
         }
 
         /// <summary>
@@ -65,17 +68,18 @@ namespace RedisLeaderboard.Services
         /// </summary>
         /// <param name="currentPg">Page number of the current page</param>
         /// <param name="perPage">Number of entries per page</param>
+        /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg = 1, int perPage = 10)
+        private async Task<List<LeaderboardEntryModel>> GetFromRedisCache(int currentPg = 1, int perPage = 10, string db = "leaderboard")
         {
-            numberOfEntries = (int)await _db.SortedSetLengthAsync("leaderboard");
+            numberOfEntries = (int)await _db.SortedSetLengthAsync(db);
 
             // calculate the range to retrieve based on the current
             // page number and the number of entries per page
             int from = currentPg * perPage - perPage;
             int to = from + (perPage - 1);
 
-            var redisData = await _db.SortedSetRangeByRankWithScoresAsync("leaderboard", from, to, Order.Descending);
+            var redisData = await _db.SortedSetRangeByRankWithScoresAsync(db, from, to, Order.Descending);
 
             // convert redis data to List<LeaderboardEntryModel> and return
             return redisData.Select(obj => new LeaderboardEntryModel(obj.Element, (int)obj.Score)).ToList();
@@ -95,8 +99,9 @@ namespace RedisLeaderboard.Services
         /// <summary>
         /// Returns a list of LeaderboardEntryModels from the DB (json data)
         /// </summary>
+        /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        public async Task LoadDB()
+        public async Task LoadDB(string db = "leaderboard")
         {
             // get starter data from JSON file
             StreamReader r = new StreamReader("Data/data.json");
@@ -105,7 +110,7 @@ namespace RedisLeaderboard.Services
 
             // add to redis sorted set
             foreach (var obj in result)
-                await _db.SortedSetAddAsync("leaderboard", obj.username, obj.score);
+                await _db.SortedSetAddAsync(db, obj.username, obj.score);
         }
     }
 }
