@@ -8,13 +8,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ILeaderboardEntryService, LeaderboardEntryService>();
 
-// redis configuration
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "Redis_";
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
