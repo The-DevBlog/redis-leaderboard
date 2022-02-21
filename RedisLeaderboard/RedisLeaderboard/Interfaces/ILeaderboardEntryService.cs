@@ -17,7 +17,7 @@ namespace RedisLeaderboard.Interfaces
         /// <param name="perPage">Number of entries per page</param>
         /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage, string db = "leaderboard");
+        Task<List<LeaderboardEntryModel>> GetEntriesForPage(int currentPg, int perPage, string db = "leaderboard");
 
         /// <summary>
         /// Returns a list of LeaderboardEntryModels from the DB (json data)
@@ -37,7 +37,7 @@ namespace RedisLeaderboard.Interfaces
         /// </summary>
         /// <param name="db">Specified redis DB</param>
         /// <param name="entry">New leaderboard entry</param>
-        Task AddLeaderboardEntry(LeaderboardEntryModel entry, string db = "leaderboard");
+        Task AddEntry(LeaderboardEntryModel entry, string db = "leaderboard");
 
         /// <summary>
         /// Deletes a leaderboard entry from the redis cache

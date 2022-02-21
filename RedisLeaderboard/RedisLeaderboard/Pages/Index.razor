@@ -86,7 +86,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        leaderboardEntries = await _cache.GetEntriesForPage(currentPg, perPage);
 
         //set the max possible page number
         //ex: if entries per page is 10 and there are 26 entries, there is 3 pages
@@ -109,13 +109,13 @@
             return;
 
         // get new page data
-        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        leaderboardEntries = await _cache.GetEntriesForPage(currentPg, perPage);
     }
 
     private async Task AddEntry()
     {
-        await _cache.AddLeaderboardEntry(newEntry);
-        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        await _cache.AddEntry(newEntry);
+        leaderboardEntries = await _cache.GetEntriesForPage(currentPg, perPage);
         maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 
@@ -127,7 +127,7 @@
         if (leaderboardEntries.Count == 1)
             SwitchPage("prev");
 
-        leaderboardEntries = await _cache.GetLeaderboardEntries(currentPg, perPage);
+        leaderboardEntries = await _cache.GetEntriesForPage(currentPg, perPage);
         maxPg = (int)Math.Ceiling((double)_cache.GetTotalCount() / (double)perPage);
     }
 }

@@ -19,6 +19,12 @@ namespace RedisLeaderboard.Services
             _db = _redis.GetDatabase(0);
         }
 
+        public LeaderboardEntryService(IDatabase db, ConnectionMultiplexer redis)
+        {
+            _db = db;
+            _redis = redis;
+        }
+
         /// <summary>
         /// Returns the total number of leaderboard entries
         /// </summary>
@@ -35,7 +41,7 @@ namespace RedisLeaderboard.Services
         /// <param name="perPage">Number of entries per page</param>
         /// <param name="db">Specified redis DB</param>
         /// <returns>List<LeaderboardEntryModel></returns>
-        public async Task<List<LeaderboardEntryModel>> GetLeaderboardEntries(int currentPg, int perPage, string db = "leaderboard")
+        public async Task<List<LeaderboardEntryModel>> GetEntriesForPage(int currentPg, int perPage, string db = "leaderboard")
         {
             if (numberOfEntries == 0)
                 await LoadDB(db);
@@ -48,7 +54,7 @@ namespace RedisLeaderboard.Services
         /// </summary>
         /// <param name="entry">New leaderboard entry</param>
         /// <param name="db">Specified redis DB</param>
-        public async Task AddLeaderboardEntry(LeaderboardEntryModel entry, string db = "leaderboard")
+        public async Task AddEntry(LeaderboardEntryModel entry, string db = "leaderboard")
         {
             await _db.SortedSetAddAsync(db, entry.username, entry.score);
         }
