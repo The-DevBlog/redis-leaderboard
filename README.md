@@ -8,6 +8,8 @@ the scores in descending order. The leaderboard data fetching API uses a blazing
 fast cache system known as Redis, while the website itself is hosted as a 
 DotNet 6 Blazor Server application. 
 
+![screenshot](./RedisLeaderboard/RedisLeaderboard/wwwroot/images/screenshot.png)
+
 ## How it Works
 
 Upon initial startup, the Redis cache is populated from a Json file containing 
@@ -37,3 +39,10 @@ Run the official Docker Redis image:
 
 `docker run --name [database name] -p 5002:6379 -d redis`
 
+From the project root, run the project:
+
+`dotnet run --project .\RedisLeaderboard\RedisLeaderboard\RedisLeaderboard.csproj`
+
+Navigate to the listening port in your web browser:
+
+`Now listening on: https://localhost:[port]`
