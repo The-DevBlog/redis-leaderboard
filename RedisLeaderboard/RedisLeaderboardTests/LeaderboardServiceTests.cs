@@ -42,7 +42,7 @@ namespace RedisLeaderboardTests
         [InlineData(6, 3)]
         public async Task CanGetLeaderboardEntriesForPage(int expected, int pageNum)
         {
-            // arnge
+            // arrnge
             var service = new IsolatedService();
             await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
             await service.leaderboardService.LoadDB("leaderboard-tests");
@@ -54,10 +54,13 @@ namespace RedisLeaderboardTests
             Assert.Equal(expected, results.Count);
         }
 
+        /// <summary>
+        /// Tests AddEntry()
+        /// </summary>
         [Fact]
         public async Task CanAddEntry()
         {
-            // arange
+            // arrange
             var service = new IsolatedService();
             await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
             await service.leaderboardService.LoadDB("leaderboard-tests");
@@ -69,6 +72,26 @@ namespace RedisLeaderboardTests
 
             // assert
             Assert.True(contains);
+        }
+
+        /// <summary>
+        /// Tests DeleteEntry()
+        /// </summary>
+        [Fact]
+        public async Task CanDeleteEntry()
+        {
+            // arrange 
+            var service = new IsolatedService();
+            await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
+            await service.leaderboardService.LoadDB("leaderboard-tests");
+
+            // act
+            await service.leaderboardService.DeleteEntry("Frodo", "leaderboard-tests");
+            bool contains = await service.db.SortedSetRemoveAsync("leaderboard-tests", "Frodo");
+
+            // assert 
+            Assert.False(contains);
+
         }
     }
 }
