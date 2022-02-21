@@ -19,8 +19,9 @@ namespace RedisLeaderboard.Services
             _db = _redis.GetDatabase(0);
         }
 
-        public LeaderboardEntryService(IDatabase db, ConnectionMultiplexer redis)
+        public LeaderboardEntryService(IConfiguration config, IDatabase db, ConnectionMultiplexer redis)
         {
+            _config = config;
             _db = db;
             _redis = redis;
         }

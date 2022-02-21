@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using RedisLeaderboard.Models;
 using RedisLeaderboard.Services;
 using StackExchange.Redis;
 using System.IO;
@@ -7,9 +8,12 @@ using Xunit;
 
 namespace RedisLeaderboardTests
 {
-    public class LeaderboardServiceTests
+    public class IsolatedService
     {
-        private LeaderboardEntryService BuildService()
+        public ConnectionMultiplexer redis;
+        public IDatabase db;
+        public LeaderboardEntryService leaderboardService;
+        public IsolatedService()
         {
             string path = Directory.GetCurrentDirectory();
 
@@ -18,12 +22,15 @@ namespace RedisLeaderboardTests
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var redis = ConnectionMultiplexer.Connect(config.GetConnectionString("Redis"));
-            var db = redis.GetDatabase(0);
+            redis = ConnectionMultiplexer.Connect(config.GetConnectionString("Redis"));
+            db = redis.GetDatabase(0);
 
-            return new LeaderboardEntryService(db, redis);
+            leaderboardService = new LeaderboardEntryService(config, db, redis);
         }
+    }
 
+    public class LeaderboardServiceTests
+    {
         /// <summary>
         /// Tests GetEntriesForPage()
         /// </summary>
@@ -35,23 +42,33 @@ namespace RedisLeaderboardTests
         [InlineData(6, 3)]
         public async Task CanGetLeaderboardEntriesForPage(int expected, int pageNum)
         {
-            var service = BuildService();
-            await service.LoadDB("leaderboard-tests");
-            var results = await service.GetEntriesForPage(pageNum, 10, "leaderboard-tests");
+            // arnge
+            var service = new IsolatedService();
+            await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
+            await service.leaderboardService.LoadDB("leaderboard-tests");
 
+            // act
+            var results = await service.leaderboardService.GetEntriesForPage(pageNum, 10, "leaderboard-tests");
+
+            // assert
             Assert.Equal(expected, results.Count);
         }
 
+        [Fact]
         public async Task CanAddEntry()
         {
-            var service = BuildService();
-            await service.LoadDB("leaderboard-tests");
+            // arange
+            var service = new IsolatedService();
+            await service.db.SortedSetRemoveRangeByRankAsync("leaderboard-tests", 0, -1);
+            await service.leaderboardService.LoadDB("leaderboard-tests");
 
-            var newEntry = new LeaderboardEntryModel();
+            // act
+            var newEntry = new LeaderboardEntryModel("TestUser", 678);
+            await service.leaderboardService.AddEntry(newEntry, "leaderboard-tests");
+            bool contains = await service.db.SortedSetRemoveAsync("leaderboard-tests", newEntry.username);
 
-            await service.AddEntry()
-
-            Assert.Equal(expected, results.Count);
+            // assert
+            Assert.True(contains);
         }
     }
 }
