@@ -18,8 +18,8 @@ and displays it in a table format within the web browser. Users can add leaderbo
 entries, which pushes the new information into the cache. Users can also delete
 entries from the leaderboard which remove that information from the cache. 
 
-All of the data that is on the leaderboard will persist as long as the "leaderboard" 
-redis cache is not manually modified. The user does have the option to 'reset' the 
+The leaderboard data will persist as long as the page is not re-initialized. The
+ user does have the option to 'reset' the 
 data using the 'Reset Data' button. This action will remove all data from the 
 "leaderboard" cache and re-load the starting Json data into it. 
 

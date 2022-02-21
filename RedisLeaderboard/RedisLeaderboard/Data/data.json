@@ -1,106 +1,132 @@
 [
   {
     "username": "Gandalf",
-    "score": 4200
+    "score": 4200,
+    "index": 100
   },
   {
     "username": "Elrond",
-    "score": 3500
+    "score": 3500,
+    "index": 125
   },
   {
     "username": "Aragorn",
-    "score": 3000
+    "score": 3000,
+    "index": 200
   },
   {
     "username": "TomBombadil",
-    "score": 1500
+    "score": 1500,
+    "index": 50
   },
   {
     "username": "Isildur",
-    "score": 1800
+    "score": 1800,
+    "index": 25
   },
   {
     "username": "Bilbo",
-    "score": 3000
+    "score": 3000,
+    "index": 1
   },
   {
     "username": "Gollum",
-    "score": 950
+    "score": 950,
+    "index": 10
   },
   {
     "username": "Theoden",
-    "score": 1256
+    "score": 1256,
+    "index": 900
   },
   {
     "username": "Sauron",
-    "score": 4257
+    "score": 4257,
+    "index": 700
   },
   {
     "username": "Faramir",
-    "score": 1883
+    "score": 1883,
+    "index": 550
   },
   {
     "username": "Denethor",
-    "score": 1
+    "score": 1,
+    "index": 400
   },
   {
     "username": "Saruman",
-    "score": 3002
+    "score": 3002,
+    "index": 233
   },
   {
     "username": "Eowyn",
-    "score": 225
+    "score": 225,
+    "index": 235
   },
   {
     "username": "Arwen",
-    "score": 156
+    "score": 156,
+    "index": 238
   },
   {
     "username": "Eomer",
-    "score": 890
+    "score": 890,
+    "index": 765
   },
   {
     "username": "Theodred",
-    "score": 300
+    "score": 300,
+    "index": 598
   },
   {
     "username": "Balrog",
-    "score": 4776
+    "score": 4776,
+    "index": 480
   },
   {
     "username": "Galadriel",
-    "score": 5332
+    "score": 5332,
+    "index": 1000
   },
   {
     "username": "FarmerMagot",
-    "score": 300
+    "score": 300,
+    "index": 29
   },
   {
     "username": "Samwise",
-    "score": 2900
+    "score": 2900,
+    "index": 33
   },
   {
     "username": "Boromir",
-    "score": 2500
+    "score": 2500,
+    "index": 44
   },
   {
     "username": "Legolas",
-    "score": 2200
+    "score": 2200,
+    "index": 52
   },
   {
     "username": "Pippin",
-    "score": 2000
+    "score": 2000,
+    "index": 12
   },
   {
     "username": "Merri",
-    "score": 1800
+    "score": 1800,
+    "index": 6
   },
   {
     "username": "Frodo",
-    "score": 1400
+    "score": 1400,
+    "index": 66
   },
   {
     "username": "Gimli",
-    "score": 900
+    "score": 900,
+    "index": 99
   }
 ]
