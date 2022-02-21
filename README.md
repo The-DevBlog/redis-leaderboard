@@ -33,16 +33,24 @@ Install [Docker](https://www.docker.com/products/docker-desktop)
 
 Clone repo to local machine: 
 
-`git clone https://github.com/AndrewCS149/redis-leaderboard.git`
+```
+git clone https://github.com/AndrewCS149/redis-leaderboard.git
+```
 
 Run the official Docker Redis image: 
 
-`docker run --name [database name] -p 5002:6379 -d redis`
+```
+docker run --name [database name] -p 5002:6379 -d redis
+```
 
 From the project root, run the project:
 
-`dotnet run --project .\RedisLeaderboard\RedisLeaderboard\RedisLeaderboard.csproj`
+```
+dotnet run --project .\RedisLeaderboard\RedisLeaderboard\RedisLeaderboard.csproj
+```
 
 Navigate to the listening port in your web browser:
 
-`Now listening on: https://localhost:[port]`
+```
+Now listening on: https://localhost:[port]
+```
